@@ -86,17 +86,21 @@ class Seagold {
 
   async gameStart() {
     if (this.isGaming) return;
-    const roleId = Math.ceil(Math.random() * 3);
-    const gameInfo = await this.gameApi.gameStart({roleId});
+    try {
+      const roleId = Math.ceil(Math.random() * 3);
+      const gameInfo = await this.gameApi.gameStart({roleId});
 
-    this.gameInfo = {
-      roleId,
-      gameId: gameInfo.gameId,
-      mapData: this.makeMap(gameInfo.mapData, 6),
-      curPos: gameInfo.curPos,
-      blockData: gameInfo.blockData,
-      gameDiamond: 0
-    };
+      this.gameInfo = {
+        roleId,
+        gameId: gameInfo.gameId,
+        mapData: this.makeMap(gameInfo.mapData, 6),
+        curPos: gameInfo.curPos,
+        blockData: gameInfo.blockData,
+        gameDiamond: 0
+      };
+    }catch(e){
+      console.err(e)
+    }
   }
 
   async gameOver() {
