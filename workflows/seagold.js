@@ -105,21 +105,25 @@ class Seagold {
 
   async gameOver() {
     if (!this.isGaming) return;
-    const gameOverInfo = await this.gameApi.gameOver();
-    this.userInfo.todayDiamond = gameOverInfo.todayDiamond;
-    this.userInfo.todayLimitDiamond = gameOverInfo.todayLimitDiamond;
+    try {
+      const gameOverInfo = await this.gameApi.gameOver();
+      this.userInfo.todayDiamond = gameOverInfo.todayDiamond;
+      this.userInfo.todayLimitDiamond = gameOverInfo.todayLimitDiamond;
 
-    this.history.push({
-      gameId: this.gameInfo.gameId,
-      gameDiamond: gameOverInfo.gameDiamond,
-      realDiamond: gameOverInfo.realDiamond,
-      todayDiamond: gameOverInfo.todayDiamond,
-      todayLimitDiamond: gameOverInfo.todayLimitDiamond
-    });
+      this.history.push({
+        gameId: this.gameInfo.gameId,
+        gameDiamond: gameOverInfo.gameDiamond,
+        realDiamond: gameOverInfo.realDiamond,
+        todayDiamond: gameOverInfo.todayDiamond,
+        todayLimitDiamond: gameOverInfo.todayLimitDiamond
+      });
 
-    this.resetGame();
-
-    return gameOverInfo;
+      this.resetGame();
+    }catch(e){
+      console.err(e) 
+    }finally{
+      return gameOverInfo;
+    }
   }
 
   async executeGameCommand() {
@@ -136,12 +140,16 @@ class Seagold {
     if (commands.length <= 0) {
       return false;
     }
-    const gameCommandInfo = await this.gameApi.gameCommand(this.gameInfo.gameId, commands);
-    this.gameInfo.curPos = gameCommandInfo.curPos;
-    this.gameInfo.blockData = gameCommandInfo.blockData;
-    this.gameInfo.gameDiamond = gameCommandInfo.gameDiamond;
-
-    return true;
+    try {
+      const gameCommandInfo = await this.gameApi.gameCommand(this.gameInfo.gameId, commands);
+      this.gameInfo.curPos = gameCommandInfo.curPos;
+      this.gameInfo.blockData = gameCommandInfo.blockData;
+      this.gameInfo.gameDiamond = gameCommandInfo.gameDiamond;
+    }catch(e){
+      console.err(e)
+    }finally{
+      return true;
+    }
   }
 
   getCommand(start, end) {
